@@ -1,0 +1,34 @@
+[project]
+name = "guia-python-modulo-2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { file = "LICENSE" }
+dependencies = [
+    "pytest>=8.4.2",
+]
+
+[tool.pytest.ini_options]
+# Directorios de búsqueda de pruebas. Por defecto es el directorio actual.
+# Aquí se especifica que solo busque en el directorio 'tests'.
+testpaths = "tests"
+
+# Opciones de verbosidad (más detalles en la salida).
+addopts = "-v"
+
+# Ignora directorios específicos.
+# Por ejemplo, si usas entornos virtuales dentro del proyecto.
+norecursedirs = [
+    ".git",
+    "venv",
+    ".venv"
+]
+
+# Puedes definir tus propios marcadores para agrupar pruebas.
+# Útil para ejecutar solo un subconjunto de pruebas.
+# Por ejemplo, `pytest -m "slow"` para ejecutar solo las pruebas lentas.
+markers = [
+    "slow: marca las pruebas que tardan mucho en ejecutarse",
+    "integration: marca las pruebas de integración"
+]
