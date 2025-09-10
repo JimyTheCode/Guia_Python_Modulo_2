@@ -12,6 +12,11 @@ Conceptos integrados: Lógica de juegos, random.choice, listas y/o sets (para le
 
 """
 
+"""
+Ejercicio 14: Juego del Ahorcado (Hangman)
+Versión mejorada para facilitar validaciones y pruebas.
+"""
+
 import random
 
 # Colores ANSI
@@ -103,14 +108,13 @@ def mostrar_tablero(palabra, letras_adivinadas, vidas) -> None:
     """
     Muestra el estado actual del juego.
 
-    - Dibuja el ahorcado en ASCII según las vidas restantes.
-    - Muestra la palabra secreta parcialmente adivinada.
-    - Lista las letras que el jugador ya intentó.
-
     Args:
-        palabra (str): La palabra secreta que se debe adivinar.
-        letras_adivinadas (set[str]): Conjunto de letras que el jugador ya adivinó.
+        palabra (str): La palabra secreta.
+        letras_adivinadas (set[str]): Letras adivinadas hasta ahora.
         vidas (int): Número de vidas restantes.
+
+    Returns:
+        None
     """
     print(AHORCADO_ASCII[len(AHORCADO_ASCII) - vidas - 1])
     palabra_mostrada = " ".join([letra if letra in letras_adivinadas else "_" for letra in palabra])
@@ -119,18 +123,12 @@ def mostrar_tablero(palabra, letras_adivinadas, vidas) -> None:
     print(f"Vidas restantes: {VERDE}{vidas}{RESET}\n")
 
 
-def validar_letra(letras_usadas) :
+def validar_letra(letras_usadas):
     """
     Solicita al jugador una letra y valida la entrada.
 
-    Reglas de validación:
-    - No puede estar vacía.
-    - Solo se permite una letra.
-    - No se permiten números, símbolos o espacios (solo letras).
-    - No puede ser una letra ya usada.
-
     Args:
-        letras_usadas (set[str]): Conjunto de letras que el jugador ya intentó.
+        letras_usadas (set[str]): Letras ya intentadas por el jugador.
 
     Returns:
         str: Letra válida en minúsculas.
@@ -157,18 +155,20 @@ def validar_letra(letras_usadas) :
         return entrada
 
 
-def jugar() -> None:
+def jugar(palabra_fija=None) -> None:
     """
-    Función principal que ejecuta el juego del ahorcado.
+    Ejecuta una partida del juego del ahorcado.
 
-    - Selecciona una palabra secreta al azar.
-    - Controla el bucle principal del juego.
-    - Permite al jugador adivinar letras hasta ganar o perder.
+    Args:
+        palabra_fija (str | None): Palabra fija para pruebas. Si es None, se elige aleatoria.
+
+    Returns:
+        None
     """
     print(f"{AZUL}Bienvenido al juego del Ahorcado.{RESET}")
     print("Adivina la palabra secreta antes de quedarte sin vidas.\n")
 
-    palabra = seleccionar_palabra()
+    palabra = palabra_fija or seleccionar_palabra()
     letras_adivinadas = set()
     vidas = 6
 
@@ -184,7 +184,6 @@ def jugar() -> None:
             vidas -= 1
             print(f"{ROJO}Fallaste. La letra '{letra}' no está en la palabra.{RESET}")
 
-        # Verificar si todas las letras han sido adivinadas
         if all(letra in letras_adivinadas for letra in palabra):
             print(f"\n{VERDE}¡Felicidades! Adivinaste la palabra: {palabra}{RESET}")
             break
@@ -196,8 +195,6 @@ def jugar() -> None:
 def main() -> None:
     """
     Punto de entrada principal del programa.
-
-    Permite al jugador jugar varias partidas si lo desea.
     """
     while True:
         jugar()
@@ -209,3 +206,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
