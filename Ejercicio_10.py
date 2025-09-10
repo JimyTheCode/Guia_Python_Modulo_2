@@ -5,7 +5,7 @@
 # Conceptos aplicados: Listas anidadas (matrices), bucles anidados, list comprehensions anidadas.
 
 
-def validar_matriz(matriz) :
+def validar_matriz(matriz):
     """
     Valida que la matriz sea una lista de listas con dimensiones correctas.
 
@@ -14,9 +14,6 @@ def validar_matriz(matriz) :
 
     Returns:
         list[list]: Matriz validada.
-
-    Raises:
-        ValueError: Si la matriz no es válida.
     """
     if not matriz or not isinstance(matriz, list):
         raise ValueError(" La matriz debe ser una lista no vacía.")
@@ -27,7 +24,7 @@ def validar_matriz(matriz) :
     return matriz
 
 
-def transponer_matriz_for(matriz) :
+def transponer_matriz_for(matriz):
     """
     Transpone una matriz usando bucles for anidados.
 
@@ -51,7 +48,7 @@ def transponer_matriz_for(matriz) :
     return transpuesta
 
 
-def transponer_matriz_comprehension(matriz) :
+def transponer_matriz_comprehension(matriz):
     """
     Transpone una matriz usando list comprehension anidada.
 
