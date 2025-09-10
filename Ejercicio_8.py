@@ -1,43 +1,45 @@
 # Ejercicio 8: Filtrado de Datos con List Comprehensions
 # Dada una lista de números [-5, 10, -15, 20, -25, 30], utiliza una list comprehension para crear tres nuevas listas:
-# •	Una lista con solo los números positivos.
-# •	Una lista con los cuadrados de todos los números.
-# •	Una lista de strings que diga "positivo" o "negativo" para cada número, usando un ternario dentro de la comprensión.
-# •	Conceptos aplicados: List comprehensions, operador ternario.
+# • Una lista con solo los números positivos.
+# • Una lista con los cuadrados de todos los números.
+# • Una lista de strings que diga "positivo" o "negativo" para cada número, usando un ternario dentro de la comprensión.
 
 
-
-def validar_lista_numeros(lista) :
+def validar_lista_numeros(lista):
     """
     Valida que todos los elementos de una lista sean enteros o flotantes.
 
     Args:
-        lista (list[int | float]): Lista de números.
+        lista (list): Lista de números.
 
     Returns:
-        list[int | float]: Lista validada.
+        list: Lista validada.
 
     Raises:
         ValueError: Si algún elemento no es numérico.
     """
+    if not isinstance(lista, list):
+        raise ValueError("La entrada debe ser una lista.")
+
     for num in lista:
-        if not isinstance(num):
+        if not isinstance(num, (int, float)):
             raise ValueError(f"El valor {num} no es un número válido.")
+
     return lista
 
 
-def filtrar_datos(lista) :
+def filtrar_datos(lista):
     """
     Genera tres listas a partir de la lista original usando list comprehensions.
 
     Args:
-        lista (list[int | float]): Lista de números.
+        lista (list): Lista de números.
 
     Returns:
         tuple:
-            - lista_positivos (list[int | float]): Solo los números positivos.
-            - lista_cuadrados (list[int | float]): Cuadrados de todos los números.
-            - lista_signos (list[str]): "positivo" o "negativo" según el número.
+            - lista_positivos (list): Solo los números positivos.
+            - lista_cuadrados (list): Cuadrados de todos los números.
+            - lista_signos (list): "positivo" o "negativo" según el número.
     """
     lista_validada = validar_lista_numeros(lista)
 
@@ -48,16 +50,14 @@ def filtrar_datos(lista) :
     return lista_positivos, lista_cuadrados, lista_signos
 
 
-def mostrar_resultados(positivos: list[int | float],
-                       cuadrados: list[int | float],
-                       signos: list[str]) -> None:
+def mostrar_resultados(positivos, cuadrados, signos):
     """
     Imprime los resultados de las listas generadas.
 
     Args:
-        positivos (list[int | float]): Números positivos.
-        cuadrados (list[int | float]): Cuadrados de los números.
-        signos (list[str]): Estado de cada número ("positivo" o "negativo").
+        positivos (list): Números positivos.
+        cuadrados (list): Cuadrados de los números.
+        signos (list): Estado de cada número ("positivo" o "negativo").
     """
     print("\n Resultados del Filtrado con List Comprehensions")
     print("-" * 50)
@@ -83,3 +83,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
