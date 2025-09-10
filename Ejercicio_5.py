@@ -3,6 +3,23 @@
 # Conceptos aplicados: Operador ternario, operador módulo (%), if.
 
 
+def clasificar_numero(numero: int) -> tuple[str, bool]:
+    """
+    Clasifica un número como Par o Impar, y determina si es múltiplo de 5.
+
+    Args:
+        numero (int): Número entero a clasificar.
+
+    Returns:
+        tuple:
+            - str: "Par" o "Impar".
+            - bool: True si es múltiplo de 5, False en caso contrario.
+    """
+    clasificacion = "Par" if numero % 2 == 0 else "Impar"
+    multiplo_5 = numero % 5 == 0
+    return clasificacion, multiplo_5
+
+
 def validaciones():
     """
     Solicita al usuario un número y valida la entrada.
@@ -10,6 +27,7 @@ def validaciones():
     Reglas de validación:
     - No puede estar vacío.
     - Debe contener solo dígitos (sin letras ni símbolos).
+    - No se permiten decimales ni números negativos.
 
     Returns:
         int: Número validado ingresado por el usuario.
@@ -22,7 +40,7 @@ def validaciones():
             continue
 
         if not entrada.isdigit():
-            print("Error: El valor debe ser un número entero válido.")
+            print("Error: El valor debe ser un número entero positivo válido.")
             continue
 
         return int(entrada)
@@ -36,11 +54,11 @@ def main():
     - Verifica si es múltiplo de 5.
     """
     numero = validaciones()
+    clasificacion, multiplo_5 = clasificar_numero(numero)
 
-    clasificacion = "Par" if numero % 2 == 0 else "Impar"
     print(f"El número {numero} es {clasificacion}.")
 
-    if numero % 5 == 0:
+    if multiplo_5:
         print("Además, es múltiplo de 5.")
 
 
