@@ -3,7 +3,8 @@
 # •	Ejemplo: encontrar_indices("Hola SENA", "a") debería devolver [3, 8].
 # Conceptos aplicados: Funciones, enumerate(), bucle for, list.append().
 
-def encontrar_indices(frase, letra) :
+
+def encontrar_indices(frase: str, letra: str) -> list[int]:
     """
     Analiza una frase y devuelve todas las posiciones en las que aparece una letra específica.
 
@@ -33,26 +34,64 @@ def encontrar_indices(frase, letra) :
     return indices
 
 
+def validar_frase(frase: str) -> str:
+    """
+    Valida que la frase no esté vacía ni contenga dígitos.
+
+    Args:
+        frase (str): Texto ingresado por el usuario.
+
+    Returns:
+        str: La frase validada.
+
+    Raises:
+        ValueError: Si la frase está vacía o contiene números.
+    """
+    if not frase:
+        raise ValueError("La frase no puede estar vacía.")
+    if any(ch.isdigit() for ch in frase):
+        raise ValueError("La frase no puede contener números.")
+    return frase
+
+
+def validar_letra(letra: str) -> str:
+    """
+    Valida que la letra sea un único carácter alfabético.
+
+    Args:
+        letra (str): Carácter ingresado por el usuario.
+
+    Returns:
+        str: La letra validada.
+
+    Raises:
+        ValueError: Si no es exactamente un carácter alfabético.
+    """
+    if len(letra) != 1:
+        raise ValueError("Debe ingresar exactamente una letra.")
+    if not letra.isalpha():
+        raise ValueError("Debe ingresar una letra del alfabeto (sin números ni símbolos).")
+    return letra
+
+
 def main() -> None:
+    """
+    Programa principal que solicita al usuario una frase y una letra,
+    valida ambas entradas y muestra todas las posiciones donde aparece la letra.
+    """
     while True:
-        frase = input("Ingrese una frase (sin números): ").strip()
-        if not frase:
-            print("Error: la frase no puede estar vacía.")
-            continue
-        if any(ch.isdigit() for ch in frase):
-            print("Error: la frase no puede contener números.")
-            continue
-        break
+        try:
+            frase = validar_frase(input("Ingrese una frase (sin números): ").strip())
+            break
+        except ValueError as e:
+            print(f"Error: {e}")
 
     while True:
-        letra = input("Ingrese una letra a buscar (solo letras, sin números): ").strip()
-        if len(letra) != 1:
-            print("Error: debe ingresar exactamente una letra.")
-            continue
-        if not letra.isalpha():
-            print("Error: debe ingresar una letra del alfabeto (sin números ni símbolos).")
-            continue
-        break
+        try:
+            letra = validar_letra(input("Ingrese una letra a buscar: ").strip())
+            break
+        except ValueError as e:
+            print(f"Error: {e}")
 
     posiciones = encontrar_indices(frase, letra)
 
@@ -64,3 +103,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
