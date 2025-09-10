@@ -9,30 +9,36 @@
 import random
 
 
-def leer_opcion():
+def validar_opcion(opcion: str) -> str:
     """
-    Solicita al jugador una opción válida entre 'piedra', 'papel' o 'tijeras'.
+    Valida la opción elegida por el jugador.
 
-    El ingreso se procesa en minúsculas y sin espacios extra.
-    Si el jugador ingresa un valor inválido, se mostrará un mensaje de error
-    y se pedirá la entrada nuevamente hasta que sea válida.
+    Reglas de validación:
+        - No puede estar vacía.
+        - Debe ser exactamente: 'piedra', 'papel' o 'tijeras' (en minúsculas).
+
+    Args:
+        opcion (str): Opción ingresada por el jugador.
 
     Returns:
-        str: La opción elegida por el jugador ("piedra", "papel" o "tijeras").
+        str: Opción validada.
+
+    Raises:
+        ValueError: Si la opción es inválida.
     """
+    if opcion is None or str(opcion).strip() == "":
+        raise ValueError("La opción no puede estar vacía.")
+
+    opcion = opcion.strip().lower()
     opciones_validas = ("piedra", "papel", "tijeras")
 
-    while True:
-        opcion = input("Elige piedra, papel o tijeras: ").strip().lower()
+    if opcion not in opciones_validas:
+        raise ValueError("Opción inválida. Solo se permite: piedra, papel o tijeras.")
 
-        if opcion not in opciones_validas:
-            print("Opción inválida. Intente de nuevo.")
-            continue
-
-        return opcion
+    return opcion
 
 
-def jugar_ronda(jugador, computadora):
+def jugar_ronda(jugador: str, computadora: str) -> str:
     """
     Determina el resultado de una ronda de Piedra, Papel o Tijeras.
 
@@ -43,8 +49,8 @@ def jugar_ronda(jugador, computadora):
         - Si ambos eligen lo mismo, es empate.
 
     Args:
-        jugador (str): La elección del jugador ("piedra", "papel" o "tijeras").
-        computadora (str): La elección de la computadora ("piedra", "papel" o "tijeras").
+        jugador (str): Elección del jugador.
+        computadora (str): Elección de la computadora.
 
     Returns:
         str:
@@ -52,13 +58,16 @@ def jugar_ronda(jugador, computadora):
             - "computadora" si la computadora gana la ronda.
             - "empate" si ambos eligieron la misma opción.
     """
+    jugador = validar_opcion(jugador)
+    computadora = validar_opcion(computadora)
+
     if jugador == computadora:
         return "empate"
 
     if (
-        (jugador == "piedra" and computadora == "tijeras")
-        or (jugador == "tijeras" and computadora == "papel")
-        or (jugador == "papel" and computadora == "piedra")
+            (jugador == "piedra" and computadora == "tijeras")
+            or (jugador == "tijeras" and computadora == "papel")
+            or (jugador == "papel" and computadora == "piedra")
     ):
         return "jugador"
 
@@ -73,9 +82,6 @@ def main():
     - Ejecuta rondas hasta que el jugador o la computadora ganen 3 veces.
     - Lleva un marcador actualizado después de cada ronda.
     - Declara un ganador final cuando alguno llega a 3 victorias.
-
-    Returns:
-        None
     """
     print("=== Juego: Piedra, Papel o Tijeras ===")
     print("Reglas: piedra vence a tijeras, tijeras vence a papel, papel vence a piedra.")
@@ -85,9 +91,14 @@ def main():
     victorias_computadora = 0
 
     while victorias_jugador < 3 and victorias_computadora < 3:
-        jugador = leer_opcion()
-        computadora = random.choice(["piedra", "papel", "tijeras"])
+        try:
+            jugador = input("Elige piedra, papel o tijeras: ").strip().lower()
+            jugador = validar_opcion(jugador)
+        except ValueError as e:
+            print(f"Error: {e}")
+            continue
 
+        computadora = random.choice(["piedra", "papel", "tijeras"])
         print(f"Computadora eligió: {computadora}")
 
         ganador = jugar_ronda(jugador, computadora)
@@ -111,5 +122,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
