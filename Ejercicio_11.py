@@ -4,31 +4,28 @@
 # Conceptos aplicados: Funciones, bucle while, conversión de tipos (str a int), bucle for sobre un string.
 
 
-
-def validar_cedula(cedula) :
+def validar_cedula(cedula):
     """
-    Valida que la cédula cumpla con las condiciones:
-    - Debe ser un string compuesto únicamente por dígitos.
-    - Debe tener una longitud entre 6 y 15 caracteres.
-    - La suma de sus dígitos debe ser par.
+    Valida un número de cédula bajo reglas simples.
 
     Args:
         cedula (str): Número de cédula en formato string.
 
     Returns:
-        bool: True si es válida, False si no.
+        bool: True si la cédula es válida, False en caso contrario.
     """
     if not cedula.isdigit():
-        print("Error: La cédula solo puede contener números (positivos).")
+        print("Error: La cédula solo puede contener números.")
         return False
-    if len(cedula) < 6 or len(cedula) > 15:
+
+    if not (6 <= len(cedula) <= 15):
         print("Error: La cédula debe tener entre 6 y 15 dígitos.")
         return False
 
-    suma_digitos = sum(int(digito) for digito in cedula)
+    suma_digitos = sum(int(d) for d in cedula)
 
     if suma_digitos % 2 != 0:
-        print("Error: La suma de los dígitos debe ser un número par.")
+        print("Error: La suma de los dígitos debe ser par.")
         return False
 
     return True
@@ -36,8 +33,7 @@ def validar_cedula(cedula) :
 
 def main():
     """
-    Función principal que solicita al usuario ingresar su cédula
-    hasta que se valide correctamente.
+    Solicita la cédula al usuario hasta que sea válida.
     """
     while True:
         cedula = input("Ingrese su número de cédula: ").strip()
@@ -48,3 +44,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
