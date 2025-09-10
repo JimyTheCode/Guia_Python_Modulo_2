@@ -7,30 +7,12 @@
 # Conceptos aplicados: Bucle while True, if/elif/else, len(), métodos de string (isupper(), islower(), isdigit()), break.
 
 
-def leer_password() -> str:
-    """
-    Solicita al usuario que cree una contraseña y valida que no esté vacía.
-
-    El proceso continúa en bucle hasta que el usuario ingrese un valor válido.
-
-    Returns:
-        str: La contraseña ingresada por el usuario.
-    """
-    while True:
-        contra = input("Cree una contraseña: ").strip()
-
-        if not contra:
-            print("Error: la contraseña no puede estar vacía.")
-            continue
-
-        return contra
-
-
 def validar_password(contra: str) -> list[str]:
     """
     Valida si una contraseña cumple con las reglas de seguridad definidas.
 
     Reglas de validación:
+        - No puede estar vacía ni ser None.
         - Debe tener al menos 8 caracteres.
         - Debe contener al menos una letra mayúscula.
         - Debe contener al menos un número.
@@ -43,6 +25,11 @@ def validar_password(contra: str) -> list[str]:
                    Si la lista está vacía, la contraseña cumple todas las reglas.
     """
     errores: list[str] = []
+
+    # Validación general
+    if contra is None or str(contra).strip() == "":
+        errores.append("La contraseña no puede estar vacía.")
+        return errores
 
     # Regla 1: mínimo 8 caracteres
     if len(contra) < 8:
@@ -68,9 +55,6 @@ def main() -> None:
     aceptada o cuáles reglas incumple.
 
     El proceso se repite hasta que el usuario ingrese una contraseña válida.
-
-    Returns:
-        None
     """
     print("=== Validador de Contraseñas ===")
     print("Reglas que debe cumplir su contraseña:")
@@ -80,7 +64,7 @@ def main() -> None:
     print("--------------------------------")
 
     while True:
-        contra = leer_password()
+        contra = input("Cree una contraseña: ").strip()
         errores = validar_password(contra)
 
         if not errores:
@@ -95,4 +79,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
