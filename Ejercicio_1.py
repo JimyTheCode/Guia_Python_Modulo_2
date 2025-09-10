@@ -9,84 +9,84 @@
 # Conceptos aplicados: if/elif/else anidados, operadores lógicos (and, or), input(), int(), lower(), f-strings.
 
 
-
-def obtener_edad():
+def validar_edad(valor):
     """
-    Solicita y valida la edad del cliente.
-
-    Reglas de validación:
-        - No puede estar vacío.
-        - Debe ser un número entero positivo.
-        - Debe ser mayor que 0 y menor o igual a 90.
-
-    Returns:
-        int: La edad validada del cliente.
+    Valida la edad ingresada.
+    - Debe ser un número entero positivo entre 1 y 90.
     """
-    while True:
-        edad = input("Ingrese la edad del cliente (solo números enteros positivos): ").strip()
+    if valor is None or str(valor).strip() == "":
+        raise ValueError("La edad no puede estar vacía.")
 
-        if not edad:
-            print("Error: No puede dejar el campo vacío. Intente de nuevo.")
-            continue
+    if not str(valor).lstrip("-").isdigit():
+        raise ValueError("La edad debe ser un número entero positivo.")
 
-        if not edad.isdigit():
-            print("Error: La edad debe contener únicamente números enteros positivos.")
-            continue
+    valor = int(valor)
 
-        edad = int(edad)
+    if valor <= 0:
+        raise ValueError("La edad debe ser mayor que 0.")
+    if valor > 90:
+        raise ValueError("La edad ingresada no es válida (máximo permitido: 90 años).")
 
-        if edad <= 0:
-            print("Error: La edad debe ser un número mayor a 0.")
-            continue
-        if edad > 90:
-            print("Error: La edad ingresada no es válida (máximo permitido: 90 años).")
-            continue
-
-        return edad
+    return valor
 
 
-def obtener_estudiante():
+def validar_estudiante(valor):
     """
-    Pregunta al cliente si es estudiante y valida la respuesta.
-
-    Reglas de validación:
-        - No puede estar vacío.
-        - Solo se acepta 'si' o 'no' (en minúsculas).
-
-    Returns:
-        bool: True si el cliente es estudiante, False en caso contrario.
+    Valida si la persona es estudiante.
+    Solo se acepta 'si' o 'no' (insensible a mayúsculas).
     """
-    while True:
-        respuesta = input("¿Es estudiante? (si/no): ").strip().lower()
+    if valor is None or str(valor).strip() == "":
+        raise ValueError("La respuesta no puede estar vacía.")
 
-        if not respuesta:
-            print("Error: No puede dejar el campo vacío. Intente de nuevo.")
-            continue
+    valor = str(valor).strip().lower()
+    if valor not in ("si", "no"):
+        raise ValueError("Solo se permite responder 'si' o 'no'.")
 
-        if respuesta not in ("si", "no"):
-            print("Error: Responda únicamente con 'si' o 'no'.")
-            continue
+    return valor == "si"
 
-        return respuesta == "si"
+
+def validar_cantidad(valor):
+    """
+    Valida la cantidad de personas para un grupo.
+    - Debe ser entero positivo entre 1 y 15.
+    """
+    if valor is None or str(valor).strip() == "":
+        raise ValueError("La cantidad no puede estar vacía.")
+
+    if not str(valor).lstrip("-").isdigit():
+        raise ValueError("La cantidad debe ser un número entero positivo.")
+
+    valor = int(valor)
+
+    if valor <= 0:
+        raise ValueError("La cantidad debe ser mayor a 0.")
+    if valor > 15:
+        raise ValueError("El máximo permitido es 15 personas en un solo grupo.")
+
+    return valor
+
+
+def validar_opcion(valor):
+    """
+    Valida la opción del menú principal.
+    Solo se acepta 1, 2 o 3.
+    """
+    if valor is None or str(valor).strip() == "":
+        raise ValueError("La opción no puede estar vacía.")
+
+    if not str(valor).isdigit():
+        raise ValueError("La opción debe ser un número.")
+
+    opcion = int(valor)
+    if opcion not in (1, 2, 3):
+        raise ValueError("Opción inválida. Debe ser 1, 2 o 3.")
+
+    return opcion
+
 
 
 def calcular_precio(edad, es_estudiante):
-    """
-    Calcula el precio de la entrada en función de la edad y condición de estudiante.
-
-    Reglas de precios:
-        - Menores de 12 años: $10,000
-        - De 12 a 17 años: $15,000
-        - Mayores de 17 años: $20,000
-        - Descuento del 10% si es estudiante.
-
-    Args:
-        edad (int): Edad validada del cliente.
-        es_estudiante (bool): Indica si el cliente es estudiante.
-
-    Returns:
-        int: Precio final de la entrada.
-    """
+    """Calcula el precio de la entrada según reglas del cine."""
     if edad < 12:
         precio = 10000
     elif edad <= 17:
@@ -94,22 +94,37 @@ def calcular_precio(edad, es_estudiante):
     else:
         precio = 20000
 
-    precio_final = precio * 0.9 if es_estudiante else precio
-    return int(precio_final)
+    return int(precio * 0.9) if es_estudiante else precio
+
+
+def obtener_edad():
+    while True:
+        try:
+            valor = input("Ingrese la edad del cliente: ")
+            return validar_edad(valor)
+        except ValueError as e:
+            print("Error:", e)
+
+
+def obtener_estudiante():
+    while True:
+        try:
+            valor = input("¿Es estudiante? (si/no): ")
+            return validar_estudiante(valor)
+        except ValueError as e:
+            print("Error:", e)
+
+
+def menu_opcion():
+    while True:
+        try:
+            valor = input("Seleccione una opción (1, 2 o 3): ")
+            return validar_opcion(valor)
+        except ValueError as e:
+            print("Error:", e)
 
 
 def procesar_una_entrada():
-    """
-    Procesa la compra de una sola entrada.
-
-    Flujo:
-        - Solicita edad y condición de estudiante.
-        - Calcula el precio con posibles descuentos.
-        - Muestra el detalle de la compra.
-
-    Returns:
-        int: Precio final de la entrada comprada.
-    """
     edad = obtener_edad()
     es_estudiante = obtener_estudiante()
     precio = calcular_precio(edad, es_estudiante)
@@ -123,42 +138,13 @@ def procesar_una_entrada():
 
 
 def procesar_varias_entradas():
-    """
-    Procesa la compra de varias entradas (grupo o familia).
-
-    Reglas de validación:
-        - La cantidad debe ser un número entero positivo.
-        - Mínimo 1 persona, máximo 15 personas por grupo.
-
-    Flujo:
-        - Solicita la cantidad de personas.
-        - Procesa los datos de cada persona individualmente.
-        - Calcula y muestra el total del grupo.
-
-    Returns:
-        None
-    """
     while True:
-        cantidad = input("Ingrese la cantidad de personas en el grupo: ").strip()
-
-        if not cantidad:
-            print("Error: No puede dejar el campo vacío.")
-            continue
-
-        if not cantidad.isdigit():
-            print("Error: Debe ingresar únicamente números enteros positivos.")
-            continue
-
-        cantidad = int(cantidad)
-
-        if cantidad <= 0:
-            print("Error: La cantidad debe ser mayor a 0.")
-            continue
-        if cantidad > 15:
-            print("Error: El máximo permitido es 15 personas en un solo grupo.")
-            continue
-
-        break
+        try:
+            valor = input("Ingrese la cantidad de personas en el grupo: ")
+            cantidad = validar_cantidad(valor)
+            break
+        except ValueError as e:
+            print("Error:", e)
 
     total = 0
     print("\n--- Detalle de cada persona ---")
@@ -172,56 +158,12 @@ def procesar_varias_entradas():
     print("====================================================")
 
 
-def menu_opcion():
-    """
-    Solicita y valida la opción elegida en el menú principal.
-
-    Reglas de validación:
-        - No puede estar vacío.
-        - Solo se permiten números enteros.
-        - La opción debe ser 1, 2 o 3.
-
-    Returns:
-        int: Opción elegida por el usuario.
-    """
-    while True:
-        opcion = input("Seleccione una opción (1, 2 o 3): ").strip()
-
-        if not opcion:
-            print("Error: No puede dejar el campo vacío.")
-            continue
-
-        if not opcion.isdigit():
-            print("Error: Solo se permiten números (1, 2 o 3).")
-            continue
-
-        opcion = int(opcion)
-
-        if opcion not in (1, 2, 3):
-            print("Error: Opción inválida. Debe elegir alguna de las opciones 1, 2 o 3.")
-            continue
-
-        return opcion
-
-
 def main():
-    """
-    Función principal del programa.
-
-    Flujo:
-        - Muestra un menú principal con opciones.
-        - Permite comprar una entrada, varias entradas o salir.
-        - Llama a las funciones correspondientes según la elección.
-
-    Returns:
-        None
-    """
     print("Bienvenido al Sistema de Precios de Entradas de Cine")
     print("----------------------------------------------------")
 
     while True:
         print("\nMenú principal:")
-        print("Elija el número de la opción que desea realizar")
         print("1. Comprar una sola entrada")
         print("2. Comprar varias entradas (grupo/familia)")
         print("3. Salir")
@@ -239,4 +181,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
