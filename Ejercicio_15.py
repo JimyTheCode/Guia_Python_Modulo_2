@@ -10,7 +10,9 @@ Conceptos integrados: Lógica de juegos, listas anidadas, funciones, bucles whil
 
 """
 
+
 import random
+import os
 
 # Colores ANSI
 AZUL = "\033[94m"
@@ -25,6 +27,11 @@ COLUMNAS = 5
 TURNOS = 10
 
 
+def limpiar_consola() -> None:
+    """Limpia la consola según el sistema operativo."""
+    os.system("cls" if os.name == "nt" else "clear")
+
+
 def crear_tablero():
     """
     Crea un tablero vacío de FILAS x COLUMNAS.
@@ -35,7 +42,7 @@ def crear_tablero():
     return [["~" for _ in range(COLUMNAS)] for _ in range(FILAS)]
 
 
-def colocar_barco() :
+def colocar_barco():
     """
     Coloca un barco de 3 casillas en una posición aleatoria (horizontal o vertical).
 
@@ -67,23 +74,23 @@ def mostrar_tablero(tablero) -> None:
     print()
 
 
-def validar_disparo(disparos) :
+def validar_disparo(disparos, entrada_manual: str | None = None):
     """
-    Solicita al usuario una coordenada y valida la entrada.
-
-    Reglas:
-    - Formato correcto: letra A-E + número 1-5 (ej. A3).
-    - No puede estar vacía.
-    - No puede repetirse.
+    Solicita una coordenada y valida la entrada.
 
     Args:
         disparos (set[str]): Conjunto de disparos ya realizados.
+        entrada_manual (str, opcional): Entrada predefinida (para pruebas automáticas).
 
     Returns:
         tuple[int, int]: Coordenadas validadas en formato (fila, columna).
     """
     while True:
-        entrada = input(f"{AZUL}Ingresa una coordenada (ejemplo A3): {RESET}").strip().upper()
+        if entrada_manual is not None:
+            entrada = entrada_manual.strip().upper()
+            entrada_manual = None  # Solo usar una vez
+        else:
+            entrada = input(f"{AZUL}Ingresa una coordenada (ejemplo A3): {RESET}").strip().upper()
 
         if not entrada:
             print(f"{ROJO}No puedes dejar el campo vacío.{RESET}")
@@ -107,10 +114,31 @@ def validar_disparo(disparos) :
 
         if entrada in disparos:
             print(f"{AMARILLO}Ya intentaste esa coordenada. Elige otra.{RESET}")
+            if entrada_manual is not None:  # Estamos en test
+                return None
             continue
 
         disparos.add(entrada)
         return fila, columna
+
+
+def resultado_final(tablero, barco, gano: bool) -> None:
+    """
+    Muestra el resultado final de la partida.
+
+    Args:
+        tablero (list[list[str]]): Estado del tablero.
+        barco (list[tuple[int, int]]): Coordenadas del barco.
+        gano (bool): True si ganó, False si perdió.
+    """
+    if gano:
+        print(f"{VERDE}¡Hundiste el barco completo! ¡Ganaste!{RESET}")
+    else:
+        print(f"{ROJO}Se acabaron los turnos. Perdiste.{RESET}")
+        print("La ubicación del barco era:")
+        for fila, columna in barco:
+            tablero[fila][columna] = "O"
+    mostrar_tablero(tablero)
 
 
 def jugar() -> None:
@@ -130,6 +158,7 @@ def jugar() -> None:
     print(f"Debes hundir un barco de 3 casillas en {TURNOS} turnos o menos.\n")
 
     for turno in range(1, TURNOS + 1):
+        limpiar_consola()
         print(f"{AMARILLO}Turno {turno} de {TURNOS}{RESET}")
         mostrar_tablero(tablero)
 
@@ -138,20 +167,15 @@ def jugar() -> None:
         if (fila, columna) in partes_restantes:
             tablero[fila][columna] = "O"
             partes_restantes.remove((fila, columna))
-            print(f"{VERDE}¡Le Diste!{RESET}")
+            print(f"{VERDE}¡Le diste! Faltan {len(partes_restantes)} partes.{RESET}")
             if not partes_restantes:
-                print(f"{VERDE}¡Hundiste el barco completo! Ganaste en {turno} turnos.{RESET}")
-                mostrar_tablero(tablero)
+                resultado_final(tablero, barco, True)
                 return
         else:
             tablero[fila][columna] = "X"
             print(f"{ROJO}Agua...{RESET}")
 
-    print(f"{ROJO}Se acabaron los turnos. Perdiste.{RESET}")
-    print("La ubicación del barco era:")
-    for fila, columna in barco:
-        tablero[fila][columna] = "O"
-    mostrar_tablero(tablero)
+    resultado_final(tablero, barco, False)
 
 
 def main() -> None:
@@ -168,3 +192,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
